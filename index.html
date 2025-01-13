@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Miku POSER Ver.1.0 Mediapipe PoseLandmaker x Three.js MMDLoader</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link type="text/css" rel="stylesheet" href="three.js-master/examples/main.css">
+	<style>
+		body {
+			background-color: #fff;
+			color: #444;
+		}
+
+		a {
+			color: #08f;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="info">
+		<input type="number" id="poseName" value="17" step="1" /><br><span id="poseNameText">左肩</span><br>
+		<input type="number" id="poseX" value="0" step="0.1" /><br>
+		<input type="number" id="poseY" value="0" step="0.1" /><br>
+		<input type="number" id="poseZ" value="0" step="0.1" /><br>
+		<input type="number" id="poseW" value="1" step="0.1" /><br>
+		<button id="resetPose">Reset Pose</button><br>
+		<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - MMDLoader test<br />
+		<a href="https://github.com/mrdoob/three.js/tree/master/examples/models/mmd#readme" target="_blank"
+			rel="noopener">MMD Assets license</a><br />
+		Copyright
+		<a href="https://sites.google.com/view/evpvp/" target="_blank" rel="noopener">Model Data</a>
+		<a href="http://www.nicovideo.jp/watch/sm13147122" target="_blank" rel="noopener">Dance Data</a>
+	</div>
+
+	<!-- <script src="jsm/libs/ammo.wasm.js"></script> -->
+	<!-- こんな感じでファイルの場所を変更し、index.htmlに直してgithubpagesに反映させる -->
+	<script src="three.js-master/examples/jsm/libs/ammo.wasm.js"></script>
+	<script type="importmap">
+			{
+				"imports": {
+					"three": "./three.js-master/build/three.module.js",
+					"three/addons/": "./three.js-master/examples/jsm/"
+				}
+			}
+		</script>
+
+	<script type="module">
+
+		import * as THREE from 'three';
+
+		import Stats from 'three/addons/libs/stats.module.js';
+		import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+
+		import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+		import { OutlineEffect } from 'three/addons/effects/OutlineEffect.js';
+		import { MMDLoader } from 'three/addons/loaders/MMDLoader.js';
+		import { MMDAnimationHelper } from 'three/addons/animation/MMDAnimationHelper.js';
+
+		let stats;
+		const vpds = [];
+
+		let mesh, helper, ikHelper, physicsHelper;
+		let camera, scene, renderer, effect;
+		let new_vpds;
+
+		const clock = new THREE.Clock();
+
+		Ammo().then(function (AmmoLib) {
+
+			Ammo = AmmoLib;
+
+			init();
+
+		});
+
+
+		function init() {
+
+			const container = document.createElement('div');
+			document.body.appendChild(container);
+
+			camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+			camera.position.z = 30;
+
+			// scene
+
+			scene = new THREE.Scene();
+			scene.background = new THREE.Color(0xffffff);
+
+			const gridHelper = new THREE.PolarGridHelper(30, 0);
+			gridHelper.position.y = - 10;
+			scene.add(gridHelper);
+
+			const ambient = new THREE.AmbientLight(0xaaaaaa, 3);
+			scene.add(ambient);
+
+			const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
+			directionalLight.position.set(- 1, 1, 1).normalize();
+			scene.add(directionalLight);
+
+			//
+
+			renderer = new THREE.WebGLRenderer({ antialias: true });
+			renderer.setPixelRatio(window.devicePixelRatio);
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			renderer.setAnimationLoop(animate);
+			container.appendChild(renderer.domElement);
+
+			effect = new OutlineEffect(renderer);
+
+			// STATS
+
+			stats = new Stats();
+			container.appendChild(stats.dom);
+
+			// model
+
+			function onProgress(xhr) {
+
+				if (xhr.lengthComputable) {
+
+					const percentComplete = xhr.loaded / xhr.total * 100;
+					console.log(Math.round(percentComplete, 2) + '% downloaded');
+
+				}
+
+			}
+
+
+			// const modelFile = 'models/mmd/miku/miku_v2.pmd';
+			const modelFile = 'three.js-master/examples/models/mmd/miku/miku_v2.pmd';
+			// const vmdFiles = [ 'models/mmd/vmds/wavefile_v2.vmd' ];
+			const vmdFiles = ['three.js-master/examples/models/mmd/vmds/wavefile_v2.vmd'];
+			// const vpdFiles = [
+			// 	'models/mmd/vpds/01.vpd',
+			// 	'models/mmd/vpds/02.vpd',
+			// 	'models/mmd/vpds/03.vpd',
+			// 	'models/mmd/vpds/04.vpd',
+			// 	'models/mmd/vpds/05.vpd',
+			// 	'models/mmd/vpds/06.vpd',
+			// 	'models/mmd/vpds/07.vpd',
+			// 	'models/mmd/vpds/08.vpd',
+			// 	//'models/mmd/vpds/09.vpd',
+			// 	//'models/mmd/vpds/10.vpd',
+			// 	'models/mmd/vpds/11.vpd'
+			// ];
+			// ここの1番目に追加する
+			const vpdFiles = [
+				'three.js-master/examples/models/mmd/vpds/default.vpd',
+				// 'three.js-master/examples/models/mmd/vpds/01.vpd',
+				// 'three.js-master/examples/models/mmd/vpds/02.vpd',
+				// 'three.js-master/examples/models/mmd/vpds/03.vpd',
+				// 'three.js-master/examples/models/mmd/vpds/04.vpd',
+				// 'three.js-master/examples/models/mmd/vpds/05.vpd',
+				// 'three.js-master/examples/models/mmd/vpds/06.vpd',
+				// 'three.js-master/examples/models/mmd/vpds/07.vpd',
+				// 'three.js-master/examples/models/mmd/vpds/08.vpd',
+				// 'three.js-master/examples/models/mmd/vpds/11.vpd'
+			]
+
+			helper = new MMDAnimationHelper({
+				afterglow: 2.0
+			});
+
+			const loader = new MMDLoader();
+
+			// loadを使ってモデルを読み込む。onLoad functionでloadVpd()を呼び出す -> webgl_loader_mmd_pose.htmlから引用
+			loader.load(modelFile, function (object) {
+
+				mesh = object;
+				mesh.position.y = - 10;
+				scene.add(mesh);
+
+				let vpdIndex = 0;
+
+				function loadVpd() {
+
+					const vpdFile = vpdFiles[vpdIndex];
+
+					loader.loadVPD(vpdFile, false, function (vpd) {
+						vpds.push(vpd);
+						vpdIndex++;
+						if (vpdIndex < vpdFiles.length) {
+							loadVpd();
+						} else {
+							initGui();
+						}
+					}, onProgress, null);
+
+				}
+				loadVpd();
+			}, onProgress, null);
+			// loader.loadWithAnimation( modelFile, vmdFiles, function ( mmd ) {
+
+			// 	mesh = mmd.mesh;
+			// 	mesh.position.y = - 10;
+			// 	scene.add( mesh );
+
+			// 	helper.add( mesh, {
+			// 		animation: mmd.animation,
+			// 		physics: true
+			// 	} );
+
+			// 	ikHelper = helper.objects.get( mesh ).ikSolver.createHelper();
+			// 	ikHelper.visible = false;
+			// 	scene.add( ikHelper );
+
+			// 	physicsHelper = helper.objects.get( mesh ).physics.createHelper();
+			// 	physicsHelper.visible = false;
+			// 	scene.add( physicsHelper );
+
+			// 	initGui();
+
+			// }, onProgress, null );
+
+			const controls = new OrbitControls(camera, renderer.domElement);
+			controls.minDistance = 10;
+			controls.maxDistance = 100;
+
+			window.addEventListener('resize', onWindowResize);
+
+			function initGui() {
+				// ここにparametersを作成　←webgl_raycaster_texture.htmlから引用
+				const parameters = {
+					'LeftShoulderX': 0.0,
+					'LeftShoulderY': 0.0,
+					'LeftShoulderZ': 0.0,
+					'LeftShoulderW': 0.0
+				};
+				const api = {
+					// 'pose': true,
+					'animation': true,
+					'ik': true,
+					'outline': true,
+					'physics': true,
+					'show IK bones': false,
+					'show rigid bodies': false
+				};
+
+				function getBaseName(s) {
+					return s.slice(s.lastIndexOf('/') + 1);
+				}
+
+				const gui = new GUI();
+
+				// ここにPosesのフォルダを作り、vpdsを操作できるようにする
+				// const poses = gui.addFolder( 'Poses' );
+				// const files = { default: -1 };
+				// for ( let i = 0; i < vpds.length; i ++ ) {
+				// 	files[ getBaseName( vpdFiles[ i ] ) ] = i;
+				// }
+				// poses.add( controls, 'pose', files ).onChange( onChangePose );
+
+				// function onChangePose() {
+				// 	const index = parseInt( controls.pose );
+				// 	if ( index === -1 ) {
+				// 		mesh.pose();
+				// 	} else {
+				// 		helper.pose( mesh, vpds[ index ] );
+				// 	}
+				// }
+				// guiに項目を追加せず、helper.pose()を使ってposeを変更する
+				try {
+					console.log(vpds[0]);
+					helper.pose(mesh, vpds[0]);
+					// input群の数値が変更されたときに自動でhelper.pose()を呼び出す
+					function changePose() {
+						const poseName = document.getElementById("poseName").value;
+						// poseNameが2桁の整数でない場合
+						try {
+							const poseNameInt = parseInt(poseName);
+							if (poseNameInt < 0 || poseNameInt > 92) {
+								console.log("無効なposeNameが入力されました : " + poseName);
+								document.getElementById("poseName").value = 0;
+								return;
+							}
+						} catch (e) {
+							console.error(e);
+							console.log("無効なposeNameが入力されました : " + poseName);
+							document.getElementById("poseName").value = 0;
+							return;
+						}
+
+						const poseX = document.getElementById("poseX").value;
+						const poseY = document.getElementById("poseY").value;
+						const poseZ = document.getElementById("poseZ").value;
+						const poseW = document.getElementById("poseW").value;
+						new_vpds = vpds[0];
+						new_vpds.bones[parseInt(poseName)].quaternion[0] = parseFloat(poseX);
+						new_vpds.bones[parseInt(poseName)].quaternion[1] = parseFloat(poseY);
+						new_vpds.bones[parseInt(poseName)].quaternion[2] = parseFloat(poseZ);
+						new_vpds.bones[parseInt(poseName)].quaternion[3] = parseFloat(poseW);
+						// poseNameTextを更新
+						document.getElementById("poseNameText").innerText = new_vpds.bones[parseInt(poseName)].name;
+						helper.pose(mesh, new_vpds);
+						console.log(new_vpds.bones[poseName]);
+					}
+					document.getElementById("poseName").addEventListener("input", changePose);
+					document.getElementById("poseX").addEventListener("input", changePose);
+					document.getElementById("poseY").addEventListener("input", changePose);
+					document.getElementById("poseZ").addEventListener("input", changePose);
+					document.getElementById("poseW").addEventListener("input", changePose);
+					document.getElementById("resetPose").addEventListener("click", function () {
+						for(let i = 0; i < new_vpds.bones.length; i++) {
+							new_vpds.bones[i].quaternion[0] = 0;
+							new_vpds.bones[i].quaternion[1] = 0;
+							new_vpds.bones[i].quaternion[2] = 0;
+							new_vpds.bones[i].quaternion[3] = 1;
+						}
+						document.getElementById("poseName").value = 17;
+						document.getElementById("poseX").value = 0;
+						document.getElementById("poseY").value = 0;
+						document.getElementById("poseZ").value = 0;
+						document.getElementById("poseW").value = 1;
+						changePose();
+					});
+				} catch (e) {
+					console.error(e);
+				}
+
+
+
+				// webgl-loader-mmdのloadWithAnimation()をload()に変更し、onLoadでinitPoses()を読み込み、そこでonChangePose()を設定した。結局vpdからposeの表示にはhelper( mesh , vpds[index] ):MMDAnimationHelperを使っているようだ
+
+				// 最小0, 最大1, 0.01ずつ増減するparametersを作成
+				// 失敗したので後日再挑戦
+
+				// このposeが押されると、id="poseX"などの値を取得してposeを変更する
+				// gui.add(api, 'pose').onChange(function () {
+				// 	const poseName = document.getElementById("poseName").value;
+				// 	// 0 ~ 92以外の値が入力された場合、0にする
+				// 	if (poseName < 0 || poseName > 92) {
+				// 		consile.log("無効なposeNameが入力されました : " + poseName);
+				// 		poseName = 0;
+				// 	}
+				// 	const poseNameText = document.getElementById("poseNameText");
+				// 	const poseX = document.getElementById("poseX").value;
+				// 	const poseY = document.getElementById("poseY").value;
+				// 	const poseZ = document.getElementById("poseZ").value;
+				// 	const poseW = document.getElementById("poseW").value;
+				// 	let new_vpds = vpds[0];
+				// 	// vodsからposeNameを取得する
+				// 	poseNameText.innerText = new_vpds.bones[parseInt(poseName)].name;
+				// 	// new_vpdsのbone[17] 左肩の値を変更する
+				// 	// {
+				// 	//     "name": "左肩",
+				// 	//     "translation": [0,0,0],
+				// 	//     "quaternion": [0,0,0.661953,0.749545]
+				// 	// }
+				// 	new_vpds.bones[parseInt(poseName)].quaternion[0] = parseFloat(poseX);
+				// 	new_vpds.bones[parseInt(poseName)].quaternion[1] = parseFloat(poseY);
+				// 	new_vpds.bones[parseInt(poseName)].quaternion[2] = parseFloat(poseZ);
+				// 	new_vpds.bones[parseInt(poseName)].quaternion[3] = parseFloat(poseW);
+				// 	helper.pose(mesh, new_vpds);
+				// 	console.log(new_vpds.bones[poseName]);
+				// });
+
+				gui.add(api, 'animation').onChange(function () {
+
+					helper.enable('animation', api['animation']);
+
+				});
+
+				gui.add(api, 'ik').onChange(function () {
+
+					helper.enable('ik', api['ik']);
+
+				});
+
+				gui.add(api, 'outline').onChange(function () {
+
+					effect.enabled = api['outline'];
+
+				});
+
+				gui.add(api, 'physics').onChange(function () {
+
+					helper.enable('physics', api['physics']);
+
+				});
+
+				gui.add(api, 'show IK bones').onChange(function () {
+
+					ikHelper.visible = api['show IK bones'];
+
+				});
+
+				gui.add(api, 'show rigid bodies').onChange(function () {
+
+					if (physicsHelper !== undefined) physicsHelper.visible = api['show rigid bodies'];
+
+				});
+
+			}
+
+		}
+
+		function onWindowResize() {
+
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+
+			effect.setSize(window.innerWidth, window.innerHeight);
+
+		}
+
+		//
+
+		function animate() {
+
+			stats.begin();
+			render();
+			stats.end();
+
+		}
+
+		function render() {
+
+			helper.update(clock.getDelta());
+			effect.render(scene, camera);
+
+		}
+
+	</script>
+
+</body>
+
+</html>
