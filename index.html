@@ -19,7 +19,7 @@
 </head>
 
 <body>
-	<section id="mmdloader-part">
+	<section id="mmdloader-section" style="display: none;">
 		<div id="info">
 			<input type="number" id="poseName" value="17" step="1" /><br><span id="poseNameText">左肩</span><br>
 			<input type="number" id="poseX" value="0" step="0.1" /><br>
@@ -75,6 +75,8 @@
 
 				//ここに警告メッセージを表示する
 				alert('Ammo.jsをロードしました。');
+				document.getElementById("mmdloader-section").style.display = "";
+
 
 				init();
 
