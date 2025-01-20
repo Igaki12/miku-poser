@@ -186,6 +186,7 @@
 		<h1>Pose detection using the MediaPipe PoseLandmarker task</h1>
 		<p id="loadingMsg">モジュールの読み込みに数秒かかります...</p>
 		<section id="demos" class="invisible">
+			<button onclick="document.getElementById('mediapipe-section').style.display = 'none'; document.getElementById('comparison-section').style.display = 'none'; document.getElementById('mmdloader-section').style.display = '';">MMDLoaderを起動</button>
 
 			<!-- 手持ちの画像をアップする仕組み -->
 			<h2>Comparison:<br>2枚の画像のPoseを比較</h2>
@@ -324,12 +325,6 @@
 		Ammo().then(async function (AmmoLib) {
 
 			Ammo = AmmoLib;
-
-			//ここに警告メッセージを表示する
-			alert('Ammo.jsをロードしました。');
-			document.getElementById("mmdloader-section").style.display = "";
-			document.getElementById("mediapipe-section").style.display = "none";
-
 
 			init();
 
