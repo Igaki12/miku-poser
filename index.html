@@ -1339,7 +1339,7 @@
 					// });
 
 					gui.add(api, 'POSE').onChange(function () {
-						if (api['POSE'] == true) {
+						if (api['POSE'] == false) {
 							// reset pose
 							for (let i = 0; i < vpds[0].bones.length; i++) {
 								vpds[0].bones[i].quaternion[0] = 0;
@@ -1365,45 +1365,6 @@
 								vpds[0].bones[key].quaternion[2] = Quaternions[key].z;
 								vpds[0].bones[key].quaternion[3] = Quaternions[key].w;
 							}
-
-
-
-							// if (Quaternions.leftShoulder) {
-							// 	vpds[0].bones[18].quaternion[0] = parseFloat(Quaternions.leftShoulder.x);
-							// 	vpds[0].bones[18].quaternion[1] = parseFloat(Quaternions.leftShoulder.y);
-							// 	vpds[0].bones[18].quaternion[2] = parseFloat(Quaternions.leftShoulder.z);
-							// 	vpds[0].bones[18].quaternion[3] = parseFloat(Quaternions.leftShoulder.w);
-							// }
-							// if (Quaternions.rightShoulder) {
-							// 	vpds[0].bones[50].quaternion[0] = parseFloat(Quaternions.rightShoulder.x);
-							// 	vpds[0].bones[50].quaternion[1] = parseFloat(Quaternions.rightShoulder.y);
-							// 	vpds[0].bones[50].quaternion[2] = parseFloat(Quaternions.rightShoulder.z);
-							// 	vpds[0].bones[50].quaternion[3] = parseFloat(Quaternions.rightShoulder.w);
-							// }
-							// if (Quaternions.leftElbow) {
-							// 	vpds[0].bones[20].quaternion[0] = parseFloat(Quaternions.leftElbow.x);
-							// 	vpds[0].bones[20].quaternion[1] = parseFloat(Quaternions.leftElbow.y);
-							// 	vpds[0].bones[20].quaternion[2] = parseFloat(Quaternions.leftElbow.z);
-							// 	vpds[0].bones[20].quaternion[3] = parseFloat(Quaternions.leftElbow.w);
-							// }
-							// if (Quaternions.rightElbow) {
-							// 	vpds[0].bones[52].quaternion[0] = parseFloat(Quaternions.rightElbow.x);
-							// 	vpds[0].bones[52].quaternion[1] = parseFloat(Quaternions.rightElbow.y);
-							// 	vpds[0].bones[52].quaternion[2] = parseFloat(Quaternions.rightElbow.z);
-							// 	vpds[0].bones[52].quaternion[3] = parseFloat(Quaternions.rightElbow.w);
-							// }
-							// if (Quaternions.neck) {
-							// 	vpds[0].bones[2].quaternion[0] = parseFloat(Quaternions.neck.x);
-							// 	vpds[0].bones[2].quaternion[1] = parseFloat(Quaternions.neck.y);
-							// 	vpds[0].bones[2].quaternion[2] = parseFloat(Quaternions.neck.z);
-							// 	vpds[0].bones[2].quaternion[3] = parseFloat(Quaternions.neck.w);
-							// }
-							// if (Quaternions.upperBody) {
-							// 	vpds[0].bones[1].quaternion[0] = parseFloat(Quaternions.upperBody.x);
-							// 	vpds[0].bones[1].quaternion[1] = parseFloat(Quaternions.upperBody.y);
-							// 	vpds[0].bones[1].quaternion[2] = parseFloat(Quaternions.upperBody.z);
-							// 	vpds[0].bones[1].quaternion[3] = parseFloat(Quaternions.upperBody.w);
-							// }
 						}
 						helper.pose(mesh, vpds[0]);
 
