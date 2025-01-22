@@ -299,8 +299,8 @@
 			<script>
 				document.getElementById('switchSection').addEventListener('click', function () {
 					document.getElementById('mediapipe-section').style.display = 'none';
-					if (document.getElementById('mmdloader-section') && document.getElementById('mmdloader-section').style.display == 'none') {
-						document.getElementById('mmdloader-section').style.display = '';
+					if (document.getElementById('mmd-loader-container') && document.getElementById('mmd-loader-container').style.display == 'none') {
+						document.getElementById('mmd-loader-container').style.display = '';
 					}
 					document.getElementById('mmdloader-section').style.display = '';
 				});
@@ -313,8 +313,8 @@
 			<script>
 				document.getElementById('reswitchSection').addEventListener('click', function () {
 					document.getElementById('mediapipe-section').style.display = '';
-					if (document.getElementById('mmdloader-section') && document.getElementById('mmdloader-section').style.display == 'none') {
-						document.getElementById('mmdloader-section').style.display = '';
+					if (document.getElementById('mmd-loader-container') && document.getElementById('mmd-loader-container').style.display == '') {
+						document.getElementById('mmd-loader-container').style.display = 'none';
 					}
 					document.getElementById('mmdloader-section').style.display = 'none';
 				});
