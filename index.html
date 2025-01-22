@@ -172,6 +172,16 @@
 		input {
 			margin: 0.4rem;
 		}
+		.rainbow-button {
+			background: linear-gradient(45deg, #f3ec78, #af4261, #577399, #2b4f81, #0b2e59);
+			background-size: 400%;
+			color: white;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 5px;
+			cursor: pointer;
+			animation: rainbow 3s linear infinite;
+		}
 	</style>
 
 	<!-- mediapipe-comparison : https://igaki12.github.io/mediapipe-comparison からコピー -->
@@ -194,13 +204,7 @@
 		<h1>Pose detection using the MediaPipe PoseLandmarker task</h1>
 		<p id="loadingMsg">モジュールの読み込みに数秒かかります...</p>
 		<section id="demos" class="invisible">
-			<button id="switchSection">MMDLoaderを起動</button>
-			<script>
-				document.getElementById('switchSection').addEventListener('click', function () {
-					document.getElementById('mediapipe-section').style.display = 'none';
-					document.getElementById('mmdloader-section').style.display = '';
-				});
-			</script>
+
 
 			<!-- 手持ちの画像をアップする仕組み -->
 			<h2>Comparison:<br>2枚の画像のPoseを比較</h2>
@@ -284,16 +288,30 @@
 					<th>W</th>
 				</tr>
 			</table>
+			<button id="switchSection" class="rainbow-button">MMDLoaderを起動</button>
+			<script>
+				document.getElementById('switchSection').addEventListener('click', function () {
+					document.getElementById('mediapipe-section').style.display = 'none';
+					document.getElementById('mmdloader-section').style.display = '';
+				});
+			</script>
 		</section>
 	</section>
 	<section id="mmdloader-section" style="display: none;">
 		<div id="info">
-			<input type="number" id="poseName" value="17" step="1" style="margin: 1px;" /><br><span id="poseNameText">左肩</span><br>
+			<button id="reswitchSection" class="rainbow-button">MMDLoaderを終了</button>
+			<script>
+				document.getElementById('reswitchSection').addEventListener('click', function () {
+					document.getElementById('mediapipe-section').style.display = '';
+					document.getElementById('mmdloader-section').style.display = 'none';
+				});
+			</script>
+			<!-- <input type="number" id="poseName" value="17" step="1" style="margin: 1px;" /><br><span id="poseNameText">左肩</span><br>
 			<input type="number" id="poseX" value="0" step="0.1" style="margin: 1px;" /><br>
 			<input type="number" id="poseY" value="0" step="0.1" style="margin: 1px;" /><br>
 			<input type="number" id="poseZ" value="0" step="0.1" style="margin: 1px;" /><br>
 			<input type="number" id="poseW" value="1" step="0.1" style="margin: 1px;" /><br>
-			<button id="resetPose">Reset Pose</button><br>
+			<button id="resetPose">Reset Pose</button><br> -->
 			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - MMDLoader test<br />
 			<a href="https://github.com/mrdoob/three.js/tree/master/examples/models/mmd#readme" target="_blank"
 				rel="noopener">MMD Assets license</a><br />
