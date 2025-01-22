@@ -303,6 +303,12 @@
 						document.getElementById('mmd-loader-container').style.display = '';
 					}
 					document.getElementById('mmdloader-section').style.display = '';
+					// classにlil-gui が含まれているdivを表示する
+					if (document.querySelectorAll('.lil-gui') && document.querySelectorAll('.lil-gui').length > 0){
+						document.querySelectorAll('.lil-gui').forEach((element) => {
+							element.style.display = '';
+						});
+					}
 				});
 			</script>
 		</section>
@@ -317,6 +323,12 @@
 						document.getElementById('mmd-loader-container').style.display = 'none';
 					}
 					document.getElementById('mmdloader-section').style.display = 'none';
+					// classにlil-gui が含まれているdivを非表示にする
+					if (document.querySelectorAll('.lil-gui') && document.querySelectorAll('.lil-gui').length > 0){
+						document.querySelectorAll('.lil-gui').forEach((element) => {
+							element.style.display = 'none';
+						});
+					}
 				});
 			</script>
 			<input type="number" id="poseName" value="17" step="1" style="margin: 1px; display: none;" /><br><span
