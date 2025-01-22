@@ -295,6 +295,9 @@
 			<div style="text-align: center; justify-content: center;">
 				<button id="switchSection" style="display: none; margin: 10px auto;"
 					class="rainbow-button">MMD Loaderを起動</button>
+				<button id="restartMMDLoader" style="display: none; margin: 10px auto;"
+					class="rainbow-button">MMD Loaderを再起動</button>
+					<!-- restartMMDLoaderについては後日追記 -->
 			</div>
 			<script>
 				document.getElementById('switchSection').addEventListener('click', function () {
@@ -1085,7 +1088,6 @@
 			let new_vpds;
 
 			const clock = new THREE.Clock();
-
 			Ammo().then(async function (AmmoLib) {
 
 				Ammo = AmmoLib;
