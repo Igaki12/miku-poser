@@ -172,6 +172,7 @@
 		input {
 			margin: 0.4rem;
 		}
+
 		.rainbow-button {
 			background: linear-gradient(45deg, #134d00, #007f8b, #ff0000, #ff00ff, #ff0000, #007f8b, #134d00);
 			background-size: 400%;
@@ -315,7 +316,8 @@
 					document.getElementById('mmdloader-section').style.display = 'none';
 				});
 			</script>
-			<input type="number" id="poseName" value="17" step="1" style="margin: 1px; display: none;" /><br><span id="poseNameText">左肩</span><br>
+			<input type="number" id="poseName" value="17" step="1" style="margin: 1px; display: none;" /><br><span
+				id="poseNameText">左肩</span><br>
 			<input type="number" id="poseX" value="0" step="0.1" style="margin: 1px; display: none;" /><br>
 			<input type="number" id="poseY" value="0" step="0.1" style="margin: 1px; display: none;" /><br>
 			<input type="number" id="poseZ" value="0" step="0.1" style="margin: 1px; display: none;" /><br>
@@ -1197,15 +1199,8 @@
 				window.addEventListener('resize', onWindowResize);
 
 				function initGui() {
-					// ここにparametersを作成　←webgl_raycaster_texture.htmlから引用
-					const parameters = {
-						'LeftShoulderX': 0.0,
-						'LeftShoulderY': 0.0,
-						'LeftShoulderZ': 0.0,
-						'LeftShoulderW': 0.0
-					};
 					const api = {
-						// 'pose': true,
+						'pose': true,
 						'animation': true,
 						'ik': true,
 						'outline': true,
@@ -1220,45 +1215,7 @@
 
 					const gui = new GUI();
 
-					// ここにMediapipeの結果を反映させる
-					console.log(Quaternions);
-					if (leftShoulder in Quaternions) {
-						vpds[0].bones[18].quaternion[0] = parseFloat(Quaternions.leftShoulder.x);
-						vpds[0].bones[18].quaternion[1] = parseFloat(Quaternions.leftShoulder.y);
-						vpds[0].bones[18].quaternion[2] = parseFloat(Quaternions.leftShoulder.z);
-						vpds[0].bones[18].quaternion[3] = parseFloat(Quaternions.leftShoulder.w);
-					}
-					if (rightShoulder in Quaternions) {
-						vpds[0].bones[50].quaternion[0] = parseFloat(Quaternions.rightShoulder.x);
-						vpds[0].bones[50].quaternion[1] = parseFloat(Quaternions.rightShoulder.y);
-						vpds[0].bones[50].quaternion[2] = parseFloat(Quaternions.rightShoulder.z);
-						vpds[0].bones[50].quaternion[3] = parseFloat(Quaternions.rightShoulder.w);
-					}
-					if (leftElbow in Quaternions) {
-						vpds[0].bones[20].quaternion[0] = parseFloat(Quaternions.leftElbow.x);
-						vpds[0].bones[20].quaternion[1] = parseFloat(Quaternions.leftElbow.y);
-						vpds[0].bones[20].quaternion[2] = parseFloat(Quaternions.leftElbow.z);
-						vpds[0].bones[20].quaternion[3] = parseFloat(Quaternions.leftElbow.w);
-					}
-					if (rightElbow in Quaternions) {
-						vpds[0].bones[52].quaternion[0] = parseFloat(Quaternions.rightElbow.x);
-						vpds[0].bones[52].quaternion[1] = parseFloat(Quaternions.rightElbow.y);
-						vpds[0].bones[52].quaternion[2] = parseFloat(Quaternions.rightElbow.z);
-						vpds[0].bones[52].quaternion[3] = parseFloat(Quaternions.rightElbow.w);
-					}
-					if (neck in Quaternions) {
-						vpds[0].bones[2].quaternion[0] = parseFloat(Quaternions.neck.x);
-						vpds[0].bones[2].quaternion[1] = parseFloat(Quaternions.neck.y);
-						vpds[0].bones[2].quaternion[2] = parseFloat(Quaternions.neck.z);
-						vpds[0].bones[2].quaternion[3] = parseFloat(Quaternions.neck.w);
-					}
-					if (upperBody in Quaternions) {
-						vpds[0].bones[1].quaternion[0] = parseFloat(Quaternions.upperBody.x);
-						vpds[0].bones[1].quaternion[1] = parseFloat(Quaternions.upperBody.y);
-						vpds[0].bones[1].quaternion[2] = parseFloat(Quaternions.upperBody.z);
-						vpds[0].bones[1].quaternion[3] = parseFloat(Quaternions.upperBody.w);
-					}
-					helper.pose(mesh, vpds[0]);
+
 
 
 					// ここにPosesのフォルダを作り、vpdsを操作できるようにする
@@ -1372,6 +1329,62 @@
 					// 	helper.pose(mesh, new_vpds);
 					// 	console.log(new_vpds.bones[poseName]);
 					// });
+
+					gui.add(api, 'pose').onChange(function () {
+						if(api['pose'] == true){
+							// reset pose
+							for (let i=0; i<vpds[0].bones.length; i++){
+								vpds[0].bones[i].quaternion[0] = 0;
+								vpds[0].bones[i].quaternion[1] = 0;
+								vpds[0].bones[i].quaternion[2] = 0;
+								vpds[0].bones[i].quaternion[3] = 1;
+							}
+
+						}else{
+						// ここにMediapipeの結果を反映させる
+
+						console.log(Quaternions);
+						if (leftShoulder in Quaternions) {
+							vpds[0].bones[18].quaternion[0] = parseFloat(Quaternions.leftShoulder.x);
+							vpds[0].bones[18].quaternion[1] = parseFloat(Quaternions.leftShoulder.y);
+							vpds[0].bones[18].quaternion[2] = parseFloat(Quaternions.leftShoulder.z);
+							vpds[0].bones[18].quaternion[3] = parseFloat(Quaternions.leftShoulder.w);
+						}
+						if (rightShoulder in Quaternions) {
+							vpds[0].bones[50].quaternion[0] = parseFloat(Quaternions.rightShoulder.x);
+							vpds[0].bones[50].quaternion[1] = parseFloat(Quaternions.rightShoulder.y);
+							vpds[0].bones[50].quaternion[2] = parseFloat(Quaternions.rightShoulder.z);
+							vpds[0].bones[50].quaternion[3] = parseFloat(Quaternions.rightShoulder.w);
+						}
+						if (leftElbow in Quaternions) {
+							vpds[0].bones[20].quaternion[0] = parseFloat(Quaternions.leftElbow.x);
+							vpds[0].bones[20].quaternion[1] = parseFloat(Quaternions.leftElbow.y);
+							vpds[0].bones[20].quaternion[2] = parseFloat(Quaternions.leftElbow.z);
+							vpds[0].bones[20].quaternion[3] = parseFloat(Quaternions.leftElbow.w);
+						}
+						if (rightElbow in Quaternions) {
+							vpds[0].bones[52].quaternion[0] = parseFloat(Quaternions.rightElbow.x);
+							vpds[0].bones[52].quaternion[1] = parseFloat(Quaternions.rightElbow.y);
+							vpds[0].bones[52].quaternion[2] = parseFloat(Quaternions.rightElbow.z);
+							vpds[0].bones[52].quaternion[3] = parseFloat(Quaternions.rightElbow.w);
+						}
+						if (neck in Quaternions) {
+							vpds[0].bones[2].quaternion[0] = parseFloat(Quaternions.neck.x);
+							vpds[0].bones[2].quaternion[1] = parseFloat(Quaternions.neck.y);
+							vpds[0].bones[2].quaternion[2] = parseFloat(Quaternions.neck.z);
+							vpds[0].bones[2].quaternion[3] = parseFloat(Quaternions.neck.w);
+						}
+						if (upperBody in Quaternions) {
+							vpds[0].bones[1].quaternion[0] = parseFloat(Quaternions.upperBody.x);
+							vpds[0].bones[1].quaternion[1] = parseFloat(Quaternions.upperBody.y);
+							vpds[0].bones[1].quaternion[2] = parseFloat(Quaternions.upperBody.z);
+							vpds[0].bones[1].quaternion[3] = parseFloat(Quaternions.upperBody.w);
+						}
+					}
+						helper.pose(mesh, vpds[0]);
+
+
+					})
 
 					gui.add(api, 'animation').onChange(function () {
 
