@@ -1029,7 +1029,7 @@
 			};
 		});
 
-		document.getElementById('switchSection').addEventListener('click', function () {
+		document.getElementById('switchSection').addEventListener('click', async function () {
 			// mmd-loader部分のjsを全て囲んでいる
 
 			let stats;
@@ -1223,40 +1223,40 @@
 					// ここにMediapipeの結果を反映させる
 					console.log(Quaternions);
 					if (leftShoulder in Quaternions) {
-						vpds[0].bones[18].quaternion[0] = Quaternions.leftShoulder.x;
-						vpds[0].bones[18].quaternion[1] = Quaternions.leftShoulder.y;
-						vpds[0].bones[18].quaternion[2] = Quaternions.leftShoulder.z;
-						vpds[0].bones[18].quaternion[3] = Quaternions.leftShoulder.w;
+						vpds[0].bones[18].quaternion[0] = parseFloat(Quaternions.leftShoulder.x);
+						vpds[0].bones[18].quaternion[1] = parseFloat(Quaternions.leftShoulder.y);
+						vpds[0].bones[18].quaternion[2] = parseFloat(Quaternions.leftShoulder.z);
+						vpds[0].bones[18].quaternion[3] = parseFloat(Quaternions.leftShoulder.w);
 					}
 					if (rightShoulder in Quaternions) {
-						vpds[0].bones[50].quaternion[0] = Quaternions.rightShoulder.x;
-						vpds[0].bones[50].quaternion[1] = Quaternions.rightShoulder.y;
-						vpds[0].bones[50].quaternion[2] = Quaternions.rightShoulder.z;
-						vpds[0].bones[50].quaternion[3] = Quaternions.rightShoulder.w;
+						vpds[0].bones[50].quaternion[0] = parseFloat(Quaternions.rightShoulder.x);
+						vpds[0].bones[50].quaternion[1] = parseFloat(Quaternions.rightShoulder.y);
+						vpds[0].bones[50].quaternion[2] = parseFloat(Quaternions.rightShoulder.z);
+						vpds[0].bones[50].quaternion[3] = parseFloat(Quaternions.rightShoulder.w);
 					}
 					if (leftElbow in Quaternions) {
-						vpds[0].bones[20].quaternion[0] = Quaternions.leftElbow.x;
-						vpds[0].bones[20].quaternion[1] = Quaternions.leftElbow.y;
-						vpds[0].bones[20].quaternion[2] = Quaternions.leftElbow.z;
-						vpds[0].bones[20].quaternion[3] = Quaternions.leftElbow.w;
+						vpds[0].bones[20].quaternion[0] = parseFloat(Quaternions.leftElbow.x);
+						vpds[0].bones[20].quaternion[1] = parseFloat(Quaternions.leftElbow.y);
+						vpds[0].bones[20].quaternion[2] = parseFloat(Quaternions.leftElbow.z);
+						vpds[0].bones[20].quaternion[3] = parseFloat(Quaternions.leftElbow.w);
 					}
 					if (rightElbow in Quaternions) {
-						vpds[0].bones[52].quaternion[0] = Quaternions.rightElbow.x;
-						vpds[0].bones[52].quaternion[1] = Quaternions.rightElbow.y;
-						vpds[0].bones[52].quaternion[2] = Quaternions.rightElbow.z;
-						vpds[0].bones[52].quaternion[3] = Quaternions.rightElbow.w;
+						vpds[0].bones[52].quaternion[0] = parseFloat(Quaternions.rightElbow.x);
+						vpds[0].bones[52].quaternion[1] = parseFloat(Quaternions.rightElbow.y);
+						vpds[0].bones[52].quaternion[2] = parseFloat(Quaternions.rightElbow.z);
+						vpds[0].bones[52].quaternion[3] = parseFloat(Quaternions.rightElbow.w);
 					}
 					if (neck in Quaternions) {
-						vpds[0].bones[2].quaternion[0] = Quaternions.neck.x;
-						vpds[0].bones[2].quaternion[1] = Quaternions.neck.y;
-						vpds[0].bones[2].quaternion[2] = Quaternions.neck.z;
-						vpds[0].bones[2].quaternion[3] = Quaternions.neck.w;
+						vpds[0].bones[2].quaternion[0] = parseFloat(Quaternions.neck.x);
+						vpds[0].bones[2].quaternion[1] = parseFloat(Quaternions.neck.y);
+						vpds[0].bones[2].quaternion[2] = parseFloat(Quaternions.neck.z);
+						vpds[0].bones[2].quaternion[3] = parseFloat(Quaternions.neck.w);
 					}
 					if (upperBody in Quaternions) {
-						vpds[0].bones[1].quaternion[0] = Quaternions.upperBody.x;
-						vpds[0].bones[1].quaternion[1] = Quaternions.upperBody.y;
-						vpds[0].bones[1].quaternion[2] = Quaternions.upperBody.z;
-						vpds[0].bones[1].quaternion[3] = Quaternions.upperBody.w;
+						vpds[0].bones[1].quaternion[0] = parseFloat(Quaternions.upperBody.x);
+						vpds[0].bones[1].quaternion[1] = parseFloat(Quaternions.upperBody.y);
+						vpds[0].bones[1].quaternion[2] = parseFloat(Quaternions.upperBody.z);
+						vpds[0].bones[1].quaternion[3] = parseFloat(Quaternions.upperBody.w);
 					}
 					helper.pose(mesh, vpds[0]);
 
