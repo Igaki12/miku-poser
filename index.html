@@ -295,7 +295,9 @@
 			<script>
 				document.getElementById('switchSection').addEventListener('click', function () {
 					document.getElementById('mediapipe-section').style.display = 'none';
-					document.getElementById('mmd-loader-container').style.display = '';
+					if (document.getElementById('mmdloader-section') && document.getElementById('mmdloader-section').style.display == 'none') {
+						document.getElementById('mmdloader-section').style.display = '';
+					}
 					document.getElementById('mmdloader-section').style.display = '';
 				});
 			</script>
@@ -307,7 +309,9 @@
 			<script>
 				document.getElementById('reswitchSection').addEventListener('click', function () {
 					document.getElementById('mediapipe-section').style.display = '';
-					document.getElementById('mmd-loader-container').style.display = 'none';
+					if (document.getElementById('mmdloader-section') && document.getElementById('mmdloader-section').style.display == 'none') {
+						document.getElementById('mmdloader-section').style.display = '';
+					}
 					document.getElementById('mmdloader-section').style.display = 'none';
 				});
 			</script>
