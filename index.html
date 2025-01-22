@@ -257,7 +257,7 @@
 
 				<div>
 					<!-- checkboxの背景色をオレンジにする -->
-					<input type="checkbox" id="checkbox_before" name="checkbox_before" checked
+					<input type="checkbox" id="checkbox_before" name="checkbox_before"
 						style="background-color: orange;" />
 
 					<label for="checkbox_before">姿勢予測(前)</label>
@@ -269,7 +269,7 @@
 				</div>
 
 				<div>
-					<input type="checkbox" id="checkbox_auxiliary" name="checkbox_auxiliary" checked />
+					<input type="checkbox" id="checkbox_auxiliary" name="checkbox_auxiliary" />
 					<label for="checkbox_auxiliary">補助線(前)</label>
 				</div>
 				<div>
@@ -550,6 +550,29 @@
 
 		let result_after = [];
 		FileSelector.addEventListener("change", (event) => {
+			// 再びファイルが選択された場合、前回の結果を削除する(RESET機構)
+			result_after = [];
+			Quaternions = {};
+			// checkboxのリストのT/Fをリセット
+			document.getElementById('checkbox_before').checked = false;
+			document.getElementById('checkbox_after').checked = true;
+			document.getElementById('checkbox_auxiliary').checked = false;
+			document.getElementById('checkbox_auxiliary_after').checked = true;
+
+			// テーブルの中身をリセット
+			worldLandmarksTable.innerHTML = "<tr><th rowspan='2'>部位 (番号) </th><th rowspan='2'>角度（ °）</th><th colspan='4'>Quaternion</th></tr><tr><th>X</th><th>Y</th><th>Z</th><th>W</th></tr>";
+			// <tr>
+			// 		<th rowspan="2">部位 (番号) </th>
+			// 		<th rowspan="2">角度（ °）</th>
+			// 		<th colspan="4">Quaternion</th>
+			// 	</tr>
+			// 	<tr>
+			// 		<th>X</th>
+			// 		<th>Y</th>
+			// 		<th>Z</th>
+			// 		<th>W</th>
+			// 	</tr>
+
 			const file = event.target.files[0];
 			if (!file) {
 				return;
