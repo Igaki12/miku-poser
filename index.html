@@ -1004,21 +1004,26 @@
 								worldLandmarksTable.appendChild(rightShoulderTr);
 
 								// ここから数値の受け渡し処理
+								
 								Quaternions = {
-									neck: neckQuaternionXY,
-									upperBody: upperBodyQuaternionXY,
-									leftElbow: leftElbowQuaternionXY,
-									rightElbow: rightElbowQuaternionXY,
-									leftShoulder: leftShoulderQuaternionXY,
-									rightShoulder: rightShoulderQuaternionXY,
+									2: neckQuaternionXY,
+									1: upperBodyQuaternionXY,
+									20: leftElbowQuaternionXY,
+									52: rightElbowQuaternionXY,
+									18: leftShoulderQuaternionXY,
+									50: rightShoulderQuaternionXY,
 								};
+									// -1~1の範囲をこえる場合は、-1~1に収める
+								for (const key in Quaternions) {
+									for (const key2 in Quaternions[key]) {
+										if (Quaternions[key][key2] > 1) {
+											Quaternions[key][key2] = 1;
+										} else if (Quaternions[key][key2] < -1) {
+											Quaternions[key][key2] = -1;
+										}
+									}
+								}
 								document.getElementById('switchSection').style.display = "";
-								// rightElbowQuaternionXY;
-								// leftElbowQuaternionXY;
-								// rightShoulderQuaternionXY;
-								// leftShoulderQuaternionXY;
-								// neckQuaternionXY;
-								// upperBodyQuaternionXY;
 
 
 
@@ -1345,44 +1350,60 @@
 
 						} else {
 							// ここにMediapipeの結果を反映させる
-
+							// Quaternions = {
+							// 		2: neckQuaternionXY,
+							// 		1: upperBodyQuaternionXY,
+							// 		20: leftElbowQuaternionXY,
+							// 		52: rightElbowQuaternionXY,
+							// 		18: leftShoulderQuaternionXY,
+							// 		50: rightShoulderQuaternionXY,
+							// 	};
 							console.log(Quaternions);
-							if (Quaternions.leftShoulder) {
-								vpds[0].bones[18].quaternion[0] = parseFloat(Quaternions.leftShoulder.x);
-								vpds[0].bones[18].quaternion[1] = parseFloat(Quaternions.leftShoulder.y);
-								vpds[0].bones[18].quaternion[2] = parseFloat(Quaternions.leftShoulder.z);
-								vpds[0].bones[18].quaternion[3] = parseFloat(Quaternions.leftShoulder.w);
+							for (const key in Quaternions) {
+								vpds[0].bones[key].quaternion[0] = Quaternions[key].x;
+								vpds[0].bones[key].quaternion[1] = Quaternions[key].y;
+								vpds[0].bones[key].quaternion[2] = Quaternions[key].z;
+								vpds[0].bones[key].quaternion[3] = Quaternions[key].w;
 							}
-							if (Quaternions.rightShoulder) {
-								vpds[0].bones[50].quaternion[0] = parseFloat(Quaternions.rightShoulder.x);
-								vpds[0].bones[50].quaternion[1] = parseFloat(Quaternions.rightShoulder.y);
-								vpds[0].bones[50].quaternion[2] = parseFloat(Quaternions.rightShoulder.z);
-								vpds[0].bones[50].quaternion[3] = parseFloat(Quaternions.rightShoulder.w);
-							}
-							if (Quaternions.leftElbow) {
-								vpds[0].bones[20].quaternion[0] = parseFloat(Quaternions.leftElbow.x);
-								vpds[0].bones[20].quaternion[1] = parseFloat(Quaternions.leftElbow.y);
-								vpds[0].bones[20].quaternion[2] = parseFloat(Quaternions.leftElbow.z);
-								vpds[0].bones[20].quaternion[3] = parseFloat(Quaternions.leftElbow.w);
-							}
-							if (Quaternions.rightElbow) {
-								vpds[0].bones[52].quaternion[0] = parseFloat(Quaternions.rightElbow.x);
-								vpds[0].bones[52].quaternion[1] = parseFloat(Quaternions.rightElbow.y);
-								vpds[0].bones[52].quaternion[2] = parseFloat(Quaternions.rightElbow.z);
-								vpds[0].bones[52].quaternion[3] = parseFloat(Quaternions.rightElbow.w);
-							}
-							if (Quaternions.neck) {
-								vpds[0].bones[2].quaternion[0] = parseFloat(Quaternions.neck.x);
-								vpds[0].bones[2].quaternion[1] = parseFloat(Quaternions.neck.y);
-								vpds[0].bones[2].quaternion[2] = parseFloat(Quaternions.neck.z);
-								vpds[0].bones[2].quaternion[3] = parseFloat(Quaternions.neck.w);
-							}
-							if (Quaternions.upperBody) {
-								vpds[0].bones[1].quaternion[0] = parseFloat(Quaternions.upperBody.x);
-								vpds[0].bones[1].quaternion[1] = parseFloat(Quaternions.upperBody.y);
-								vpds[0].bones[1].quaternion[2] = parseFloat(Quaternions.upperBody.z);
-								vpds[0].bones[1].quaternion[3] = parseFloat(Quaternions.upperBody.w);
-							}
+
+
+
+							// if (Quaternions.leftShoulder) {
+							// 	vpds[0].bones[18].quaternion[0] = parseFloat(Quaternions.leftShoulder.x);
+							// 	vpds[0].bones[18].quaternion[1] = parseFloat(Quaternions.leftShoulder.y);
+							// 	vpds[0].bones[18].quaternion[2] = parseFloat(Quaternions.leftShoulder.z);
+							// 	vpds[0].bones[18].quaternion[3] = parseFloat(Quaternions.leftShoulder.w);
+							// }
+							// if (Quaternions.rightShoulder) {
+							// 	vpds[0].bones[50].quaternion[0] = parseFloat(Quaternions.rightShoulder.x);
+							// 	vpds[0].bones[50].quaternion[1] = parseFloat(Quaternions.rightShoulder.y);
+							// 	vpds[0].bones[50].quaternion[2] = parseFloat(Quaternions.rightShoulder.z);
+							// 	vpds[0].bones[50].quaternion[3] = parseFloat(Quaternions.rightShoulder.w);
+							// }
+							// if (Quaternions.leftElbow) {
+							// 	vpds[0].bones[20].quaternion[0] = parseFloat(Quaternions.leftElbow.x);
+							// 	vpds[0].bones[20].quaternion[1] = parseFloat(Quaternions.leftElbow.y);
+							// 	vpds[0].bones[20].quaternion[2] = parseFloat(Quaternions.leftElbow.z);
+							// 	vpds[0].bones[20].quaternion[3] = parseFloat(Quaternions.leftElbow.w);
+							// }
+							// if (Quaternions.rightElbow) {
+							// 	vpds[0].bones[52].quaternion[0] = parseFloat(Quaternions.rightElbow.x);
+							// 	vpds[0].bones[52].quaternion[1] = parseFloat(Quaternions.rightElbow.y);
+							// 	vpds[0].bones[52].quaternion[2] = parseFloat(Quaternions.rightElbow.z);
+							// 	vpds[0].bones[52].quaternion[3] = parseFloat(Quaternions.rightElbow.w);
+							// }
+							// if (Quaternions.neck) {
+							// 	vpds[0].bones[2].quaternion[0] = parseFloat(Quaternions.neck.x);
+							// 	vpds[0].bones[2].quaternion[1] = parseFloat(Quaternions.neck.y);
+							// 	vpds[0].bones[2].quaternion[2] = parseFloat(Quaternions.neck.z);
+							// 	vpds[0].bones[2].quaternion[3] = parseFloat(Quaternions.neck.w);
+							// }
+							// if (Quaternions.upperBody) {
+							// 	vpds[0].bones[1].quaternion[0] = parseFloat(Quaternions.upperBody.x);
+							// 	vpds[0].bones[1].quaternion[1] = parseFloat(Quaternions.upperBody.y);
+							// 	vpds[0].bones[1].quaternion[2] = parseFloat(Quaternions.upperBody.z);
+							// 	vpds[0].bones[1].quaternion[3] = parseFloat(Quaternions.upperBody.w);
+							// }
 						}
 						helper.pose(mesh, vpds[0]);
 
